@@ -8,6 +8,6 @@
 
 [Shogun Showdown](https://tsapper.github.io/shogun-showdown/)
 
-[Haakon's Mind Over Matter (test)](https://tsapper.github.io/mindovermatter/)
+[Mind Over Matter (test)](https://tsapper.github.io/mindovermatter/)
 
 [Razor Ricochet](https://tsapper.github.io/razor-ricochet/)
