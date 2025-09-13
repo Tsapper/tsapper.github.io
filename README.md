@@ -12,6 +12,8 @@ NEW
 
 [Space Waves](https://tsapper.github.io/spacewaves/)
 
+[Flip Parkour](https://tsapper.github.io/flip-parkour)
+
 ---
 
 
