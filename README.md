@@ -1,6 +1,6 @@
 ## Unblocked Games
 
-new
+NEW
 
 [Ragdoll Archers](https://tsapper.github.io/ragdoll-archers/)
 
@@ -9,6 +9,8 @@ new
 [fnf](https://tsapper.github.io/fnf/)
 
 [Monkey Mart](https://tsapper.github.io/monkeymart/)
+
+[Space Waves](https://tsapper.github.io/spacewaves/)
 
 ---
 
