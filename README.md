@@ -4,6 +4,18 @@ NEW
 
 [BALATRO](https://tsapper.github.io/balatro/)
 
+[Hollow Knight](https://tsapper.github.io/hollow-knight/)
+
+[Terraria](https://tsapper.github.io/terraria/)
+
+[Buckshot Roulette](https://tsapper.github.io/buckshot-roulette/)
+
+[Five Nights at Freddy's](https://tsapper.github.io/fnaf/)
+
+[Undertale Yellow](https://tsapper.github.io/undertale/)
+
+---
+
 [Ragdoll Archers](https://tsapper.github.io/ragdoll-archers/)
 
 [Level Devil](https://tsapper.github.io/leveldevil/)
@@ -15,8 +27,6 @@ NEW
 [Space Waves](https://tsapper.github.io/spacewaves/)
 
 [Flip Parkour](https://tsapper.github.io/flip-parkour)
-
----
 
 
 [Thermomorph](https://tsapper.github.io/thermomorph/)
