@@ -2,6 +2,8 @@
 
 NEW
 
+[BALATRO](https://tsapper.github.io/balatro/)
+
 [Ragdoll Archers](https://tsapper.github.io/ragdoll-archers/)
 
 [Level Devil](https://tsapper.github.io/leveldevil/)
