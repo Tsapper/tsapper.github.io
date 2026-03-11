@@ -2,6 +2,8 @@
 
 NEW
 
+[Proxy](https://tsapper.github.io/proxy/)
+
 [BALATRO](https://tsapper.github.io/balatro/)
 
 [Hollow Knight](https://tsapper.github.io/hollow-knight/)
