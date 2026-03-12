@@ -2,209 +2,410 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Astriex</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Browse</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@0;1&display=swap');
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --border: #1e1e2e;
+      --accent: #7effb2;
+      --accent2: #5bc8fa;
+      --text: #e8e8f0;
+      --muted: #555570;
+      --bar-h: 48px;
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root { --black: #0a0a0a; --white: #f5f5f0; --gray: #888; --dim: #222; }
-    html, body { min-height: 100%; background: transparent; color: var(--white); font-family: 'Space Mono', monospace; overflow: hidden; }
 
-    /* grain */
-    body::before { display: none; }
-
-    /* ── NAV BAR ── */
-    .nav {
-      position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
-      display: flex; gap: 0; z-index: 300;
-      background: #111; border: 1px solid #2a2a2a;
-      padding: 0.5rem 0.6rem; gap: 0.25rem;
-      animation: nav-in 0.6s 0.4s ease both;
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      overflow: hidden;
     }
+
+    /* ── Landing screen ── */
+    #landing {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 0;
+      z-index: 10;
+      transition: opacity .4s ease, transform .4s ease;
+    }
+
+    #landing.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-18px);
+    }
+
+    .wordmark {
+      font-size: clamp(2.8rem, 8vw, 5.5rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      margin-bottom: 0.25em;
+      user-select: none;
+    }
+
+    .tagline {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 3rem;
+    }
+
+    .search-wrap {
+      position: relative;
+      width: min(600px, 90vw);
+    }
+
+    #landing-input {
+      width: 100%;
+      height: 54px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 0 54px 0 20px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color .2s;
+      caret-color: var(--accent);
+    }
+
+    #landing-input::placeholder { color: var(--muted); }
+
+    #landing-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(126,255,178,0.08);
+    }
+
+    .go-btn {
+      position: absolute;
+      right: 8px; top: 50%;
+      transform: translateY(-50%);
+      width: 38px; height: 38px;
+      background: var(--accent);
+      border: none; border-radius: 8px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .15s, transform .1s;
+    }
+
+    .go-btn:hover { background: #5affaa; }
+    .go-btn:active { transform: translateY(-50%) scale(0.94); }
+
+    .go-btn svg { width: 16px; height: 16px; fill: #0a0a0f; }
+
+    .quick-links {
+      display: flex; gap: 10px;
+      margin-top: 1.4rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .quick-link {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 5px 12px;
+      cursor: pointer;
+      transition: color .15s, border-color .15s;
+      user-select: none;
+    }
+
+    .quick-link:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ── Browser chrome ── */
+    #browser {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .35s ease;
+    }
+
+    #browser.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .bar {
+      height: var(--bar-h);
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+      gap: 8px;
+      padding: 0 12px;
+      flex-shrink: 0;
+    }
+
     .nav-btn {
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: 0.3rem; width: 56px; height: 52px; background: transparent; border: none;
-      cursor: pointer; color: #555; transition: color 0.15s, background 0.15s;
-      text-decoration: none; position: relative;
+      width: 32px; height: 32px;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      color: var(--muted);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: color .15s, border-color .15s;
+      flex-shrink: 0;
     }
-    .nav-btn:hover { color: var(--white); background: #1a1a1a; }
-    .nav-btn.active { color: var(--white); }
-    .nav-btn.active::after {
-      content: ''; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%);
-      width: 4px; height: 4px; background: var(--white); border-radius: 50%;
+
+    .nav-btn:hover { color: var(--text); border-color: var(--accent); }
+    .nav-btn svg { width: 14px; height: 14px; fill: currentColor; }
+
+    #url-bar {
+      flex: 1;
+      height: 32px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 0 12px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color .2s;
+      caret-color: var(--accent);
     }
-    .nav-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
-    .nav-label { font-size: 0.45rem; letter-spacing: 0.1em; text-transform: uppercase; }
 
-    /* ── PAGE CONTENT ── */
-    .page { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; padding: 2rem; padding-bottom: 6rem; }
-    .wordmark { font-family: 'Instrument Serif', serif; font-style: italic; font-size: clamp(3rem, 8vw, 6rem); letter-spacing: -0.02em; line-height: 1; margin-bottom: 0.15em; animation: fade-up 0.8s ease both; }
-    .tagline { font-size: 0.65rem; color: var(--gray); letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 3rem; animation: fade-up 0.8s 0.1s ease both; }
-    .search-wrap { display: flex; width: 100%; max-width: 560px; border: 1px solid #2a2a2a; background: #111; animation: fade-up 0.8s 0.2s ease both; transition: border-color 0.2s; }
-    .search-wrap:focus-within { border-color: var(--white); }
-    #url-input { flex: 1; background: transparent; border: none; outline: none; color: var(--white); font-family: 'Space Mono', monospace; font-size: 0.8rem; padding: 1rem 1.2rem; caret-color: var(--white); }
-    #url-input::placeholder { color: #333; }
-    #go-btn { background: var(--white); color: #000 !important; border: none; padding: 0 1.4rem; font-family: 'Space Mono', monospace; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: background 0.15s; }
-    #go-btn:hover { background: var(--gray); }
-    .shortcuts { display: flex; gap: 1.5rem; margin-top: 2rem; animation: fade-up 0.8s 0.3s ease both; }
-    .shortcut { font-size: 0.6rem; color: #444; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: color 0.2s; }
-    .shortcut:hover { color: var(--white); }
-    #status { margin-top: 1rem; font-size: 0.6rem; color: #444; letter-spacing: 0.1em; min-height: 1em; animation: fade-up 0.8s 0.35s ease both; }
-    .corner { position: fixed; font-size: 0.5rem; letter-spacing: 0.15em; text-transform: uppercase; color: #2a2a2a; }
-    .corner.tl { top: 1.5rem; left: 1.5rem; }
-    .corner.br { bottom: 1.5rem; right: 1.5rem; }
+    #url-bar:focus { border-color: var(--accent); }
 
-    @keyframes fade-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes nav-in { from { opacity: 0; transform: translateX(-50%) translateY(16px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
-  
-  /* ── VANTA READABILITY OVERRIDES ── */
-  * { color: #ffffff !important; }
-  input, select, textarea,
-  .ctrl-select, .ctrl-input, .search-wrap, .search-wrap input,
-  .season-select, #season-select,
-  .cat-btn, .ctrl-btn, .modal-btn, .page-btn, .key-record-btn,
-  .nav-btn, .nav, .modal-header, .modal-player,
-  .sidebar-header, .episode-sidebar,
-  .about-block, .api-prompt,
-  .movie-card, .game-card,
-  .movies-grid, .games-grid,
-  .section, .row, .page, .page-header,
-  .pagination, .controls,
-  .toggle-track { background: transparent !important; }
-  input, select, textarea,
-  .ctrl-select, .ctrl-input, .season-select, #season-select {
-    background: rgba(0,0,0,0.35) !important;
-    border-color: rgba(255,255,255,0.25) !important;
-  }
-  input:focus, select:focus, textarea:focus,
-  .ctrl-select:focus, .ctrl-input:focus, .season-select:focus {
-    border-color: rgba(255,255,255,0.8) !important;
-    background: rgba(0,0,0,0.5) !important;
-  }
-  .nav { background: rgba(0,0,0,0.45) !important; border-color: rgba(255,255,255,0.1) !important; }
-  .nav-btn:hover { background: rgba(255,255,255,0.08) !important; }
-  .cat-btn, .ctrl-btn, .modal-btn, .page-btn, .key-record-btn {
-    background: rgba(0,0,0,0.35) !important;
-    border-color: rgba(255,255,255,0.2) !important;
-  }
-  .cat-btn:hover, .ctrl-btn:hover, .modal-btn:hover, .page-btn:hover,
-  .cat-btn.active, .ctrl-btn.primary {
-    background: rgba(255,255,255,0.15) !important;
-    border-color: rgba(255,255,255,0.7) !important;
-  }
-  .ctrl-btn.primary { background: rgba(255,255,255,0.9) !important; color: #000 !important; }
-  .ctrl-btn.danger { border-color: rgba(200,80,80,0.5) !important; }
-  .ctrl-btn.danger:hover { border-color: rgba(200,80,80,0.9) !important; }
-  .toggle-track { background: rgba(0,0,0,0.4) !important; border-color: rgba(255,255,255,0.2) !important; }
-  input:checked ~ .toggle-track { background: rgba(255,255,255,0.85) !important; }
-  .toggle-thumb { background: rgba(255,255,255,0.4) !important; }
-  input:checked ~ .toggle-thumb { background: #000 !important; }
-  .modal, .modal-player, .modal-header, .modal-body,
-  .episode-sidebar, .sidebar-header, .episode-list { background: rgba(0,0,0,0.75) !important; }
-  .about-block { background: rgba(0,0,0,0.3) !important; border-color: rgba(255,255,255,0.1) !important; }
-  .movie-card { background: rgba(0,0,0,0.25) !important; }
-  .movie-card:hover { background: rgba(0,0,0,0.4) !important; }
-  .game-card { background: rgba(0,0,0,0.25) !important; }
-  .ep-item { background: transparent !important; border-color: rgba(255,255,255,0.05) !important; }
-  .ep-item:hover { background: rgba(255,255,255,0.07) !important; }
-  .ep-item.active { background: rgba(255,255,255,0.1) !important; border-left-color: #fff !important; }
-  .movies-grid, .games-grid { background: rgba(255,255,255,0.05) !important; }
-  .section-label, .page-sub, .row-desc, .movie-year-overlay,
-  .movie-rating, .ep-air, .about-key, .about-val,
-  .nav-label, .modal-meta, .page-info { color: rgba(255,255,255,0.6) !important; }
-  .loader-dot { background: rgba(255,255,255,0.3) !important; }
-  .theme-swatch.active::after { color: #fff !important; }
-  ::placeholder { color: rgba(255,255,255,0.3) !important; }
+    .bar-go {
+      height: 32px;
+      padding: 0 14px;
+      background: var(--accent);
+      border: none; border-radius: 7px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.78rem;
+      color: #0a0a0f;
+      cursor: pointer;
+      transition: background .15s;
+      flex-shrink: 0;
+    }
 
-  html, body { min-height: 100% !important; }
+    .bar-go:hover { background: #5affaa; }
 
-  #go-btn, .search-wrap button { color: #000 !important; background: rgba(255,255,255,0.92) !important; }
-  select option { background: #1a1a1a !important; color: #fff !important; }
+    .home-btn {
+      width: 32px; height: 32px;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      color: var(--muted);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: color .15s, border-color .15s;
+      flex-shrink: 0;
+    }
+    .home-btn:hover { color: var(--accent); border-color: var(--accent); }
+    .home-btn svg { width: 14px; height: 14px; fill: currentColor; }
 
+    /* loading bar */
+    #load-bar {
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      width: 0%;
+      transition: width .3s ease;
+      flex-shrink: 0;
+    }
 
-  /* CSS ANIMATED BACKGROUND */ 33%{transform:translate(3%,-2%) scale(1.04)} 66%{transform:translate(-2%,3%) scale(0.97)} 100%{transform:translate(2%,1%) scale(1.02)} } 33%{transform:translate(-3%,2%) scale(0.98)} 66%{transform:translate(2%,-3%) scale(1.03)} 100%{transform:translate(-1%,-1%) scale(1)} }
+    #frame {
+      flex: 1;
+      border: none;
+      background: #fff;
+    }
 
-</style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.clouds.min.js"></script>
+    /* ── Noise overlay ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.025;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    /* grid lines behind landing */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(126,255,178,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(126,255,178,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    #landing { z-index: 5; }
+  </style>
 </head>
 <body>
 
-<span class="corner tl">Astriex</span>
-<span class="corner br">v1.1.0</span>
-
-<div class="page">
-  <h1 class="wordmark">Astriex</h1>
-  <p class="tagline">BETA</p>
-  <div class="search-wrap">
-    <input id="url-input" type="text" placeholder="enter a url or search query..." autocomplete="off" spellcheck="false" />
-    <button id="go-btn">Go</button>
+  <!-- Landing -->
+  <div id="landing">
+    <div class="wordmark">browse.</div>
+    <div class="tagline">private · unrestricted · instant</div>
+    <div class="search-wrap">
+      <input id="landing-input" type="text" placeholder="Enter a URL or search term…" autocomplete="off" spellcheck="false" />
+      <button class="go-btn" onclick="navigate()">
+        <svg viewBox="0 0 16 16"><path d="M3 8h8.586l-2.293-2.293 1.414-1.414L14.414 8l-3.707 3.707-1.414-1.414L11.586 9H3V8z"/></svg>
+      </button>
+    </div>
+    <div class="quick-links">
+      <span class="quick-link" onclick="go('https://google.com')">Google</span>
+      <span class="quick-link" onclick="go('https://youtube.com')">YouTube</span>
+      <span class="quick-link" onclick="go('https://reddit.com')">Reddit</span>
+      <span class="quick-link" onclick="go('https://wikipedia.org')">Wikipedia</span>
+      <span class="quick-link" onclick="go('https://github.com')">GitHub</span>
+    </div>
   </div>
-  
-  
-</div>
 
-<!-- floating nav -->
-<nav class="nav">
-  <a class="nav-btn active" href="/" title="Home">
-    <svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
-    <span class="nav-label">Home</span>
-  </a>
-  <a class="nav-btn" href="/g" title="Games">
-    <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4M8 10v4"/><circle cx="15" cy="11" r="1" fill="currentColor"/><circle cx="17" cy="13" r="1" fill="currentColor"/></svg>
-    <span class="nav-label">Games</span>
-  </a>
-  <a class="nav-btn" href="/m" title="Media">
-    <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
-    <span class="nav-label">Media</span>
-  </a>
-  <a class="nav-btn" href="/s" title="Settings">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
-    <span class="nav-label">Settings</span>
-  </a>
-</nav>
+  <!-- Browser UI -->
+  <div id="browser">
+    <div class="bar">
+      <button class="nav-btn" onclick="goBack()" title="Back">
+        <svg viewBox="0 0 16 16"><path d="M10.293 3.293 5.586 8l4.707 4.707 1.414-1.414L8.414 8l3.293-3.293z"/></svg>
+      </button>
+      <button class="nav-btn" onclick="goForward()" title="Forward">
+        <svg viewBox="0 0 16 16"><path d="M5.707 3.293 10.414 8 5.707 12.707l-1.414-1.414L7.586 8 4.293 4.707z"/></svg>
+      </button>
+      <button class="nav-btn" onclick="reload()" title="Reload">
+        <svg viewBox="0 0 16 16"><path d="M13.451 5.609c-.506-1.065-1.265-1.953-2.216-2.595A6.004 6.004 0 0 0 2.036 8H.026C.507 3.613 4.21.101 8.7.101c2.309 0 4.412.902 5.99 2.376L16 .167v5.604h-5.604l3.055-2.162zM2.549 10.391c.506 1.065 1.265 1.953 2.216 2.595A5.972 5.972 0 0 0 8.7 14.5a5.972 5.972 0 0 0 4.664-2.223A5.984 5.984 0 0 0 14.764 8h2.01C16.293 12.387 12.59 15.9 8.1 15.9a8.22 8.22 0 0 1-5.99-2.376L.8 15.834V10.23h5.604l-3.055 2.161z"/></svg>
+      </button>
+      <input id="url-bar" type="text" placeholder="Enter URL…" spellcheck="false"
+        onkeydown="if(event.key==='Enter') navigateBar()" />
+      <button class="bar-go" onclick="navigateBar()">Go</button>
+      <button class="home-btn" onclick="goHome()" title="Home">
+        <svg viewBox="0 0 16 16"><path d="M8 1 1 7h2v7h4v-4h2v4h4V7h2z"/></svg>
+      </button>
+    </div>
+    <div id="load-bar"></div>
+    <iframe id="frame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-pointer-lock allow-downloads"></iframe>
+  </div>
 
-<script src="/uv/uv.bundle.js"></script>
-<script src="/uv/uv.config.js"></script>
-<script src="/global.js"></script>
-<script>
-  const UV_PREFIX = "/uv/service/";
-  const SW_PATH = "/uv/sw.js";
-  const SW_SCOPE = "/uv/service/";
+  <script>
+    // ── CONFIG ──────────────────────────────────────────────
+    // Replace this with your actual Cloudflare Worker URL after deploying
+    const WORKER_URL = 'https://billowing-recipe-e6ce.tsanghaakon.workers.dev/';
+    // ────────────────────────────────────────────────────────
 
-  function navigate(url) {
-    if (!url) return;
-    if (!url.startsWith("http://") && !url.startsWith("https://")) {
-      url = url.includes(".") && !url.includes(" ") ? "https://" + url : (window.ASTRIEX_SEARCH || "https://duckduckgo.com/?q=") + encodeURIComponent(url);
+    const landing   = document.getElementById('landing');
+    const browser   = document.getElementById('browser');
+    const frame     = document.getElementById('frame');
+    const urlBar    = document.getElementById('url-bar');
+    const loadBar   = document.getElementById('load-bar');
+    const landingInput = document.getElementById('landing-input');
+
+    let history = [];
+    let historyIndex = -1;
+
+    function normalizeUrl(raw) {
+      raw = raw.trim();
+      if (!raw) return null;
+      // If it looks like a search term, send to Google
+      if (!raw.includes('.') || raw.includes(' ')) {
+        return 'https://www.google.com/search?q=' + encodeURIComponent(raw);
+      }
+      return raw.startsWith('http') ? raw : 'https://' + raw;
     }
-    const prefix = typeof __uv$config !== "undefined" ? __uv$config.prefix : UV_PREFIX;
-    const encode = typeof __uv$config !== "undefined" ? __uv$config.encodeUrl : encodeURIComponent;
-    location.href = prefix + encode(url);
-  }
-  function setInput(url) { document.getElementById("url-input").value = url; document.getElementById("url-input").focus(); }
-  document.getElementById("go-btn").addEventListener("click", () => navigate(document.getElementById("url-input").value.trim()));
-  document.getElementById("url-input").addEventListener("keydown", (e) => { if (e.key === "Enter") navigate(document.getElementById("url-input").value.trim()); });
 
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register(SW_PATH, { scope: SW_SCOPE })
-      .then(() => {  })
-      .catch((e) => {  });
-  }
-</script>
+    function proxyUrl(url) {
+      return WORKER_URL + '/browse?url=' + encodeURIComponent(url);
+    }
 
-<div id="vanta-bg" style="position:fixed;inset:0;z-index:-1;width:100%;height:100%;"></div>
-<script>
-(function() {
-  var pref; try { pref = JSON.parse(localStorage.getItem('astriex_background') || '"clouds"'); } catch(e) { pref = 'clouds'; }
-  if (pref === 'minimal') { document.getElementById('vanta-bg').style.background = '#2d2d2d'; return; }
-  var speed = pref === 'clouds_slow' ? 0.60 : 1.60;
-  VANTA.CLOUDS({
-    el: "#vanta-bg", mouseControls: false, touchControls: false, gyroControls: false,
-    minHeight: 200, minWidth: 200, backgroundColor: 0x333333, skyColor: 0x292929,
-    cloudColor: 0x444444, cloudShadowColor: 0x818181, sunColor: 0x747474,
-    sunGlareColor: 0x7c7c7c, sunlightColor: 0x474747, speed: speed
-  });
-})();
-</script>
+    function go(url) {
+      url = normalizeUrl(url);
+      if (!url) return;
+
+      // Show browser, hide landing
+      landing.classList.add('hidden');
+      browser.classList.add('visible');
+
+      // Push history
+      history = history.slice(0, historyIndex + 1);
+      history.push(url);
+      historyIndex = history.length - 1;
+
+      urlBar.value = url;
+      loadFrame(url);
+    }
+
+    function loadFrame(url) {
+      // Animate load bar
+      loadBar.style.width = '0%';
+      setTimeout(() => { loadBar.style.width = '60%'; }, 50);
+      frame.onload = () => {
+        loadBar.style.width = '100%';
+        setTimeout(() => { loadBar.style.width = '0%'; }, 400);
+      };
+      frame.src = proxyUrl(url);
+    }
+
+    function navigate() {
+      const val = landingInput.value;
+      if (val.trim()) go(val);
+    }
+
+    function navigateBar() {
+      const val = urlBar.value;
+      if (val.trim()) go(val);
+    }
+
+    function goBack() {
+      if (historyIndex > 0) {
+        historyIndex--;
+        const url = history[historyIndex];
+        urlBar.value = url;
+        loadFrame(url);
+      }
+    }
+
+    function goForward() {
+      if (historyIndex < history.length - 1) {
+        historyIndex++;
+        const url = history[historyIndex];
+        urlBar.value = url;
+        loadFrame(url);
+      }
+    }
+
+    function reload() {
+      if (history[historyIndex]) loadFrame(history[historyIndex]);
+    }
+
+    function goHome() {
+      browser.classList.remove('visible');
+      landing.classList.remove('hidden');
+      landingInput.value = '';
+      setTimeout(() => { landingInput.focus(); }, 400);
+    }
+
+    // Enter key on landing input
+    landingInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') navigate();
+    });
+
+    // Focus landing input on load
+    window.addEventListener('load', () => landingInput.focus());
+  </script>
 </body>
 </html>
