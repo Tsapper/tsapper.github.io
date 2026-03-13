@@ -2,7 +2,6 @@
 
 NEW
 
-[Proxy](https://tsapper.github.io/proxy/)
 
 [BALATRO](https://tsapper.github.io/balatro/)
 
