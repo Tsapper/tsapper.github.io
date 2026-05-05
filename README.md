@@ -5,6 +5,8 @@ NEW
 
 [Remote Browser](https://acts-weekend-serving-display.trycloudflare.com/)
 
+[Remote Browser Spectator](https://acts-weekend-serving-display.trycloudflare.com/#shared)
+
 [BALATRO mini (savable by saving state file)](https://tsapper.github.io/balatro-mini/)
 
 [BALATRO](https://tsapper.github.io/balatro/)
