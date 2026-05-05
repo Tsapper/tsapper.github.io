@@ -3,6 +3,10 @@
 NEW
 
 
+[Remote Browser](https://acts-weekend-serving-display.trycloudflare.com/)
+
+[BALATRO mini (savable by saving state file)](https://tsapper.github.io/balatro-mini/)
+
 [BALATRO](https://tsapper.github.io/balatro/)
 
 [Hollow Knight](https://tsapper.github.io/hollow-knight/)
