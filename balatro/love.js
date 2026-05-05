@@ -14078,13 +14078,17 @@ var Love = (function() {
       noExitRuntime = true;
       run();
       if (typeof ENVIRONMENT_IS_PTHREAD === "undefined" || !ENVIRONMENT_IS_PTHREAD) {
+        // Expose FS globally for debugging and manual sync
+        window.FS = FS;
+        window.IDBFS = IDBFS;
         Module.addRunDependency("IDBFS_sync");
         FS.mkdir("/home/web_user/love");
         FS.mount(IDBFS, {}, "/home/web_user/love");
         FS.syncfs(true, function(err) {
           if (err) {
-            Module["printErr"](err)
+            Module["printErr"]("IDBFS load error: " + err)
           } else {
+            console.log("IDBFS: saves loaded from IndexedDB successfully");
             Module.removeRunDependency("IDBFS_sync")
           }
         });
@@ -14094,7 +14098,15 @@ var Love = (function() {
               Module["printErr"](err)
             }
           })
-        })
+        });
+        // Periodically sync saves to IndexedDB so they persist even if tab crashes
+        setInterval(function() {
+          FS.syncfs(false, function(err) {
+            if (err) {
+              Module["printErr"]("Periodic save sync error: " + err)
+            }
+          })
+        }, 5000);
       }
 
 
