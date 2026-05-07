@@ -2,12 +2,7 @@
 
 NEW
 
-
-[Remote Browser](https://acts-weekend-serving-display.trycloudflare.com/)
-
-[Remote Browser Spectator](https://acts-weekend-serving-display.trycloudflare.com/#shared)
-
-[BALATRO](https://tsapper.github.io/balatro/)
+[BALATRO](https://tsapper.github.io/balatro-save/)
 
 [Hollow Knight](https://tsapper.github.io/hollow-knight/)
 
