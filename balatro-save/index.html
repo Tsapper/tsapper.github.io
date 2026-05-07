@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <script src="preload.js"></script>
     <script>
       const PREFIX = "Balatro_vanilla_";
       const originalOpen = indexedDB.open;
@@ -34,6 +35,8 @@
   </head>
   <body>
     <canvas id="canvas"></canvas>
+    <script src="module.part1.js"></script>
+    <script src="module.part2.js"></script>
     <script src="module.js"></script>
     <script>
       (async () => {
