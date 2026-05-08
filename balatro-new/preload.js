@@ -36,6 +36,7 @@ async function preloadSaves() {
         { key: "/home/web_user/love/game/settings.jkr", url: "save_data/settings.jkr", mode: SETTINGS_PERMS },
         { key: "/home/web_user/love/game/1/meta.jkr",    url: "save_data/1/meta.jkr",    mode: FILE_PERMS },
         { key: "/home/web_user/love/game/1/profile.jkr", url: "save_data/1/profile.jkr", mode: FILE_PERMS },
+        { key: "/home/web_user/love/game/1/save.jkr",    url: "save_data/1/save.jkr",    mode: FILE_PERMS },
     ];
 
     const entries = await Promise.all(files.map(async ({ key, url, mode }) => {

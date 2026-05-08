@@ -2,7 +2,7 @@
 
 NEW
 
-[BALATRO](https://tsapper.github.io/balatro-save/)
+[BALATRO](https://tsapper.github.io/balatro-new/)
 
 [Hollow Knight](https://tsapper.github.io/hollow-knight/)
 
