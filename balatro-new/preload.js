@@ -1,4 +1,5 @@
-const _originalOpen = indexedDB.open.bind(indexedDB);
+const _originalOpen = window._originalOpen;
+const _deleteDB = indexedDB.deleteDatabase.bind(indexedDB);
 
 async function preloadSaves() {
     const DIR_PERMS = 16832;
@@ -17,20 +18,25 @@ async function preloadSaves() {
         request.onerror = () => reject(request.error);
     });
 
-    // Check if meta.jkr already exists
+    // Check timestamp of settings.jkr
     const existing = await new Promise((resolve) => {
         const tx = db.transaction("FILE_DATA", "readonly");
         const store = tx.objectStore("FILE_DATA");
-        const req = store.get("/home/web_user/love/game/1/meta.jkr");
+        const req = store.get("/home/web_user/love/game/settings.jkr");
         req.onsuccess = () => resolve(req.result);
         req.onerror = () => resolve(null);
     });
 
-    if (existing) {
-        console.log("Save already exists, skipping preload.");
+    // 2026-05-08T04:30:00Z = May 7 2026 11:30pm CT (Chicago, UTC-5)
+    const cutoff = new Date("2026-05-08T04:30:00Z");
+
+    if (existing && existing.timestamp && new Date(existing.timestamp) >= cutoff) {
+        console.log("Save is recent, skipping preload.");
         db.close();
         return;
     }
+
+    console.log("Old or missing save detected, wiping and preloading...");
 
     const files = [
         { key: "/home/web_user/love/game/settings.jkr", url: "save_data/settings.jkr", mode: SETTINGS_PERMS },

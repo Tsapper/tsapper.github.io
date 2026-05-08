@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <script>
+        window._originalOpen = indexedDB.open.bind(indexedDB);
+    </script>
     <script src="preload.js"></script>
     <script>
       const PREFIX = "Balatro_vanilla_";
