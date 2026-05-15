@@ -2,7 +2,7 @@
 
 NEW
 
-[BALATRO (saving fully works now)](https://tsapper.github.io/balatro-new/)
+[BALATRO (saving fully works now you have to exit to main menu and wait 10 seconds. ask haakon if not wokring btw)](https://tsapper.github.io/balatro-new/)
 
 [Hollow Knight](https://tsapper.github.io/hollow-knight/)
 
